@@ -1,0 +1,5 @@
+{
+    "liveshare.diagnosticMode": true,
+    "liveshare.languages.allowGuestCommandControl": true,
+    "liveshare.autoShareTerminals": true
+}
