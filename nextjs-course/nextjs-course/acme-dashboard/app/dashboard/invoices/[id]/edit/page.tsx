@@ -1,7 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { updateInvoice } from "@/app/lib/actions";
 
-export default async function EditInvoicePage({ params }) {
+export default async function EditInvoicePage({ params }: { params: { id: string } }) {
   const { id } = params;
 
   const { rows } = await sql`SELECT * FROM invoices WHERE id = ${id}`;
