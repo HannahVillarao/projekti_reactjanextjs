@@ -1,20 +1,25 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { sql } from "@vercel/postgres";
 
 export async function login(formData: FormData) {
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-  // Demo credentials (ACME course uses these)
-  if (email === "user@nextmail.com" && password === "123456") {
-    cookies().set("session", "valid", {
-      httpOnly: true,
-      path: "/",
-    });
+  // Fetch user from database
+  const { rows } = await sql`
+    SELECT * FROM users WHERE email = ${email}
+  `;
 
-    return { success: true };
+  const user = rows[0];
+
+  if (!user) {
+    return { success: false, error: "User not found" };
   }
 
-  return { success: false, error: "Invalid credentials" };
+  if (user.password !== password) {
+    return { success: false, error: "Wrong password" };
+  }
+
+  return { success: true };
 }
