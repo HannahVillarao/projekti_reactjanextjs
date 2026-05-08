@@ -2,7 +2,6 @@
 
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 // CREATE
 export async function createInvoice(formData: FormData) {
@@ -16,7 +15,6 @@ export async function createInvoice(formData: FormData) {
   `;
 
   revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
 }
 
 // UPDATE
@@ -32,7 +30,6 @@ export async function updateInvoice(formData: FormData) {
   `;
 
   revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
 }
 
 // DELETE
