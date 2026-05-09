@@ -1,6 +1,18 @@
-export default function DashboardPage() {
+import { sql } from "@vercel/postgres";
+
+export default async function DashboardPage() {
+  // Fetch all invoices
+  const { rows: invoices } = await sql`
+    SELECT * FROM invoices;
+  `;
+
+  // Calculate stats
+  const total = invoices.length;
+  const pending = invoices.filter((inv) => inv.status === "pending").length;
+  const paid = invoices.filter((inv) => inv.status === "paid").length;
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-10 space-y-16 text-gray-200">
+    <main className="min-h-screen bg-gray-900 p-10 space-y-16 text-gray-200">
 
       {/* Header */}
       <header className="space-y-3">
@@ -12,19 +24,19 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="p-6 bg-gray-800/60 backdrop-blur rounded-2xl shadow-sm border border-gray-700">
+        <div className="p-6 bg-gray-800 rounded-2xl shadow-sm border border-gray-700">
           <h2 className="text-lg font-medium text-gray-300">Total Invoices</h2>
-          <p className="text-4xl font-semibold mt-3 text-red-400">42</p>
+          <p className="text-4xl font-semibold mt-3 text-red-400">{total}</p>
         </div>
 
-        <div className="p-6 bg-gray-800/60 backdrop-blur rounded-2xl shadow-sm border border-gray-700">
+        <div className="p-6 bg-gray-800 rounded-2xl shadow-sm border border-gray-700">
           <h2 className="text-lg font-medium text-gray-300">Pending</h2>
-          <p className="text-4xl font-semibold mt-3 text-yellow-400">8</p>
+          <p className="text-4xl font-semibold mt-3 text-yellow-400">{pending}</p>
         </div>
 
-        <div className="p-6 bg-gray-800/60 backdrop-blur rounded-2xl shadow-sm border border-gray-700">
+        <div className="p-6 bg-gray-800 rounded-2xl shadow-sm border border-gray-700">
           <h2 className="text-lg font-medium text-gray-300">Paid</h2>
-          <p className="text-4xl font-semibold mt-3 text-green-400">34</p>
+          <p className="text-4xl font-semibold mt-3 text-green-400">{paid}</p>
         </div>
       </section>
 
@@ -34,10 +46,10 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <a
-            href="/dashboard/invoices/[id]]/edit"
+            href="/dashboard/invoices/edit"
             className="p-6 rounded-2xl bg-blue-500/20 text-blue-200 font-medium text-xl text-center shadow-sm hover:bg-blue-500/30 transition border border-blue-500/20"
           >
-            Edit Invoices
+            View Invoices
           </a>
 
           <a

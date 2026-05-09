@@ -2,6 +2,8 @@
 
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
 
 // CREATE
 export async function createInvoice(formData: FormData) {
@@ -14,7 +16,8 @@ export async function createInvoice(formData: FormData) {
     VALUES (${customerId}, ${amount}, ${status})
   `;
 
-  revalidatePath("/dashboard/invoices");
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 // UPDATE
@@ -29,17 +32,22 @@ export async function updateInvoice(formData: FormData) {
     WHERE id = ${id}
   `;
 
-  revalidatePath("/dashboard/invoices");
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 // DELETE
 export async function deleteInvoice(formData: FormData) {
   const id = formData.get("id") as string;
 
+  if (!id) {
+    throw new Error("Missing invoice ID");
+  }
+
   await sql`
-    DELETE FROM invoices
-    WHERE id = ${id}
+    DELETE FROM invoices WHERE id = ${id};
   `;
 
-  revalidatePath("/dashboard/invoices");
+  revalidatePath("/dashboard/invoices/edit");
+  redirect("/dashboard/invoices/edit");
 }
