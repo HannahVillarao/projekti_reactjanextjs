@@ -1,6 +1,6 @@
 import { updateInvoice } from "@/app/lib/actions";
 
-export default function EditInvoicePage({ params }: { params: { id: string } }) {
+export default async function EditInvoicePage({ params }) {
   const { id } = params;
 
   return (
